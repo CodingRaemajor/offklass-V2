@@ -1,7 +1,19 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { BookOpen, Brain, Trophy, Star, Play, MessageCircle, Target, Zap, GraduationCap, Heart } from "lucide-react"
+import {
+  BookOpen,
+  Brain,
+  Trophy,
+  Star,
+  Play,
+  MessageCircle,
+  Target,
+  Zap,
+  GraduationCap,
+  Heart,
+  RotateCcw,
+} from "lucide-react"
 import VideoSection from "@/components/video-section"
 import FlashcardSection from "@/components/flashcard-section"
 import QuizSection from "@/components/quiz-section"
@@ -71,6 +83,38 @@ export default function MathLearningGame() {
 
       return newProgress
     })
+  }
+
+  const resetAllProgress = () => {
+    const confirmReset = window.confirm(
+      "Are you sure you want to reset all your progress? This will clear all your points, badges, and completed activities. This action cannot be undone!",
+    )
+
+    if (confirmReset) {
+      // Reset user progress state
+      const initialProgress: UserProgress = {
+        videosWatched: 0,
+        flashcardsCompleted: 0,
+        quizzesCompleted: 0,
+        totalPoints: 0,
+        level: 1,
+        badges: [],
+      }
+
+      setUserProgress(initialProgress)
+
+      // Clear all localStorage data
+      localStorage.removeItem("mathGameProgress")
+      localStorage.removeItem("watchedVideos")
+      localStorage.removeItem("completedFlashcards")
+      localStorage.removeItem("completedQuizzes")
+
+      // Show success message
+      alert("🎉 All progress has been reset! You can start your math adventure fresh!")
+
+      // Navigate back to dashboard
+      setActiveSection("dashboard")
+    }
   }
 
   const renderDashboard = () => (
@@ -239,6 +283,17 @@ export default function MathLearningGame() {
             <span className="text-sm opacity-90">🤖 Ask Me!</span>
           </button>
         </div>
+      </div>
+
+      {/* Reset Progress Button */}
+      <div className="text-center">
+        <button
+          onClick={resetAllProgress}
+          className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-8 py-4 rounded-2xl font-bold text-lg transform hover:scale-105 transition-all shadow-lg border-3 border-red-500 flex items-center gap-3 mx-auto"
+        >
+          <RotateCcw className="w-6 h-6" />🔄 Reset All Progress
+        </button>
+        <p className="text-gray-400 text-sm mt-2">This will clear all your points, badges, and completed activities</p>
       </div>
 
       {/* Achievement Showcase */}
